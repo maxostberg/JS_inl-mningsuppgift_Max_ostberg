@@ -8,17 +8,16 @@ const authorInput = document.querySelector('#author');
 const cardContainer = document.querySelector('.card-container');
 
 
+/* Submitbutton Disabled */
+submitButton.disabled = true;
+
 /* Event-listeners */
 inputs.forEach(item => {
     item.addEventListener('focusout', inputValidation);
 });
 customerForm.addEventListener('keyup', buttonEnabled);
 customerForm.addEventListener('submit', addCardToDom);
-
-
-
-/* Submitbutton Disabled */
-submitButton.disabled = true;
+document.addEventListener('DOMContentLoaded', savedCards);
 
 /* Functions */
 
@@ -42,9 +41,18 @@ function buttonEnabled(){
     }
 }
 
+/* Add the card to the DOM when submit and push the inputs into an array in local-storage */
 function addCardToDom(event){
     event.preventDefault();
 
+    /* When the event occurs, two divs are added into the DOM */
+    const calcBox = document.querySelector('.calc-box');
+    calcBox.style.display = 'flex';
+
+    const pauseContainer = document.querySelector('.pause-container');
+    pauseContainer.innerHTML = `<div class="spinning-loader"></div>`;
+
+    /* my object which contains the name, course and author. */
     const cardObj = {
         name: nameInput.value,
         course: courseInput.value,
@@ -52,19 +60,39 @@ function addCardToDom(event){
     };
 
     const data = loadDataFromLocalStorage();
-
+    
     data.push(cardObj);
 
     localStorage.setItem('cards', JSON.stringify(data));
-
+    
     /* Card to DOM */
     let htmlCard = createCard(nameInput.value, courseInput.value, authorInput.value);
+    
+    /* a timer for the different boxes and cards to be added to the dom */
+    setTimeout(function(){
+        pauseContainer.innerHTML = '';
+        calcBox.style.display = 'none';
+        submitButton.disabled = true;
+        cardContainer.innerHTML += htmlCard;
+    }, 3000)
 
-    cardContainer.innerHTML += htmlCard;
-
+    /* Looping through the inputs and resetting them */
     for(let i = 0; i < inputs.length; i++){
         inputs[i].value = '';
     }
+}
+
+/* function that puts the data in the local storage into the DOM as cards */
+function savedCards(){
+    const data = loadDataFromLocalStorage();
+
+    let htmlCode = '';
+
+    for(let i = 0; i < data.length; i++){
+        htmlCode += createCard(data[i].name, data[i].course, data[i].author)
+    }
+
+    cardContainer.innerHTML = htmlCode;
 }
 
 
