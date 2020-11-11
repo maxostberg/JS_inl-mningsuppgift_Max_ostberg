@@ -6,7 +6,7 @@ const nameInput = document.querySelector('#name');
 const courseInput = document.querySelector('#course');
 const authorInput = document.querySelector('#author');
 const cardContainer = document.querySelector('.card-container');
-
+const cardPicture = document.querySelector('.card-picture');
 
 /* Submitbutton Disabled */
 submitButton.disabled = true;
@@ -101,7 +101,7 @@ function createCard(name, course, author){
     const htmlCode = `
         <div class="card">
             <div class="card-top">
-                <img src="https://source.unsplash.com/random" alt="course picture" class="card-picture">
+                <img src="https://source.unsplash.com/random/80${randomNum()}x600" alt="course picture" class="card-picture">
             </div>
             <div class="card-bottom">
                 <div class="info-box name-box">
@@ -133,4 +133,11 @@ function loadDataFromLocalStorage(){
     }
 
     return data;
+}
+
+
+
+
+function randomNum(){
+    return Math.abs(Math.ceil(Math.random() * 10));
 }
